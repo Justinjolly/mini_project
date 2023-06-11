@@ -8,13 +8,20 @@
     <link rel="stylesheet" href="/category.css">
 </head>
 <body>
+    <div class="top">
         <div class="search">
             <input type="text" placeholder="Search">
             <i class="fa-solid fa-magnifying-glass"></i>
         </div>
         <div class="icon">
-            <img src="/logo-white.png" alt="ESELL" style="width: 105px; height: 60px; margin-top: -90px; margin-left: 50px;">
+            <img src="/logo-black-removebg-preview.png" alt="ESELL" style="width: 105px; height: 60px; margin-top: -90px; margin-left: 50px;">
         </div>
+        <nav class="navbar">
+            <ul class="navbar-list">
+              <li><a href="/main2.html">Home</a></li>
+            </ul>
+          </nav>
+    </div>
     <div class="box">
         <h5 class="category">FURNITURE</h5> 
         <div class="image">
@@ -23,25 +30,8 @@
     </div>
    <div class="bottom">
         <section class="products">
-            <div class="all-products">
-			    <div class="product">
-				    <img src="/chair.jpeg">
-				    <div class="product-info">
-					    <h4 class="product-title">wooden chair
-					    </h4>
-					    <p class="product-price">RS-299</p>
-					    <a class="product-btn" href="#">Bid Now</a>
-				    </div>
-			    </div>
-                <div class="product">
-				    <img src="/chair.jpeg">
-				    <div class="product-info">
-					    <h4 class="product-title">wooden chair
-					    </h4>
-					    <p class="product-price">RS-299</p>
-					    <a class="product-btn" href="#">Bid Now</a>
-				    </div>
-			    </div>
+            <div class="all-products" id="productContainer">
+                <!-- Product placeholders -->
             </div>
         </section>
         <div class="side">
@@ -49,11 +39,83 @@
             <a href="/furniture.html">FURNITURE</a>
             <a href="/vehicle.html">VEHICLE</a>
             <a href="/fashion.html">FASHION</a>
-            <a href="/fruits_vegi.html">FRUITS AND VEGITABLES</a>
+            <a href="/fruits_vegi.html">FRUITS AND VEGETABLES</a>
             <a href="/electronics.html">ELECTRONICS</a>
             <a href="/Artwork.html">ART WORK</a>
             <a href="/other.html">OTHER</a>
         </div>
     </div>
+
+    <script>
+                function displayProductDetails(products) {
+            const productContainer = document.getElementById('productContainer');
+
+            products.forEach((product) => {
+                if (product.category === selectedCategory) {
+                const productDiv = document.createElement('div');
+                productDiv.classList.add('product');
+                <!-- Inside the displayProductDetails() function in the HTML file -->
+
+  // Create a link to the product details page
+                const productLink = document.createElement("a");
+                productLink.href = `/pdetails.html?id=${product._id}`; // Pass the product ID as a query parameter
+                productLink.appendChild(productDiv);
+                productContainer.appendChild(productLink);
+
+                const productImage = document.createElement('img');
+                productImage.src = product.image;
+
+                const productInfoDiv = document.createElement('div');
+                productInfoDiv.classList.add('product-info');
+
+                const productName = document.createElement('h4');
+                productName.classList.add('product-title');
+                productName.textContent = product.name;
+
+                const productPrice = document.createElement('p');
+                productPrice.classList.add('product-price');
+                productPrice.textContent = 'Price: ' + product.price;
+
+                const bidButton = document.createElement('button');
+                bidButton.classList.add('product-btn');
+                bidButton.textContent = 'Bid Now';
+
+                bidButton.addEventListener('click', () => {
+                    window.location.href = '/pdetails.html?id=' + product._id;
+
+                console.log('Bid Now button clicked for product:', product.name);
+                });
+            
+                productInfoDiv.appendChild(productName);
+                productInfoDiv.appendChild(productPrice);
+                productDiv.appendChild(productImage);
+                productDiv.appendChild(productInfoDiv);
+                productInfoDiv.appendChild(bidButton);
+                productContainer.appendChild(productDiv);
+        }
+            });
+        }
+        async function fetchProductDetails(selectedCategory) {
+  try {
+    const response = await fetch('http://localhost:3000/products');
+    const products = await response.json();
+
+    if (response.ok) {
+      displayProductDetails(products, selectedCategory);
+    } else {
+      console.error('Error fetching product details:', products.error);
+    }
+  } catch (error) {
+    console.error('Error fetching product details:', error);
+  }
+}
+
+
+// Example usage: Fetch and display products with category "Electronics"
+        const selectedCategory = 'Furniture';
+        fetchProductDetails(selectedCategory);
+
+    </script>
 </body>
+
 </html>
